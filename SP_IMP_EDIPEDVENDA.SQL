@@ -110,29 +110,29 @@ create or replace procedure SP_IMP_EDIPEDVENDA(pnseqedipedvenda in edi_pedvenda.
   v_numero_itens_mad number;
   v_erro exception;
 begin
-  --o pd abaixo È utilizado na view madv_pedvendasemnsu
+  --o pd abaixo √© utilizado na view madv_pedvendasemnsu
   sp_checaparamdinamico('EXPORTACAO_GERAL', 0, 'NROFORMAPAGTO_NSU', 'S',
                         '999999',
-                        'INFORMA O NUMERO DA FORMA DE PAGAMENTO PARA VERIFICA«√O DAS NOTAS SEM NSU VINCULADO NO E-COMMERCE?' ||
-                         chr(13) || chr(10) || '999999-N√O USA.' || chr(13) ||
+                        'INFORMA O NUMERO DA FORMA DE PAGAMENTO PARA VERIFICA√á√ÉO DAS NOTAS SEM NSU VINCULADO NO E-COMMERCE?' ||
+                         chr(13) || chr(10) || '999999-N√ÉO USA.' || chr(13) ||
                          chr(10) ||
-                         'OBS: MAIS DE UMA FORMA SEPARAR POR VÕRGULA. Ex: 1,2,3 ');
+                         'OBS: MAIS DE UMA FORMA SEPARAR POR V√çRGULA. Ex: 1,2,3 ');
   sp_buscaparamdinamico('EDI_CAPTURA_PEDIDO', 0,
                         'NOMERAZAO_PADRAO_PARA_SUBST', 'S',
                         'CADASTRADO PELO CPF\CNPJ, INCLUIDO DIRETAMENTE PELO SISTEMA, CADASTRADO AUTOMATICAMENTE',
-                        'INFORMA A DESCRI«√O PADR√O PARA SUBSTITUI«√O DOS DADOS DA PESSOA QUANDO ESTA J¡ EXISTIR ' ||
+                        'INFORMA A DESCRI√á√ÉO PADR√ÉO PARA SUBSTITUI√á√ÉO DOS DADOS DA PESSOA QUANDO ESTA J√Å EXISTIR ' ||
                          chr(13) || chr(10) ||
-                         'NA GE_PESSOA. INFORMAR OS NOMES RAZ√O SEPARADOS POR VÕRGULA.',
+                         'NA GE_PESSOA. INFORMAR OS NOMES RAZ√ÉO SEPARADOS POR V√çRGULA.',
                         vsnomerazaopadraosubst);
   sp_buscaparamdinamico('EDI_CAPTURA_PEDIDO', 0, 'IMPORTA_COMISSAO_AFV',
                         'S', 'N',
-                        'IMPORTA VALOR DE COMISS√O ENVIADO PELO AFV?' ||
+                        'IMPORTA VALOR DE COMISS√ÉO ENVIADO PELO AFV?' ||
                          chr(13) || chr(10) || 'S-SIM' || chr(13) || chr(10) ||
-                         'N-N√O(PADR√O)', vspdimportacomissaoafv);
+                         'N-N√ÉO(PADR√ÉO)', vspdimportacomissaoafv);
   -- parametros
   sp_buscaparamdinamico('EDI_CAPTURA_PEDIDO', 0,
                         'DESC_CLIENTE_EDI_PEDVENDA', 'S', 'N',
-                        'BUSCA DESCONTO FINANCEIRO DO CLIENTE NO EDI_PEDVENDA?(S/N) VALOR PADR√O = N.' ||
+                        'BUSCA DESCONTO FINANCEIRO DO CLIENTE NO EDI_PEDVENDA?(S/N) VALOR PADR√ÉO = N.' ||
                          chr(13) || chr(10) ||
                          'OBS:VALOR ''N'' = CONSIDERA APENAS DESC ENVIADO NA TABELA EDI_PEDVENDA.' ||
                          chr(13) || chr(10) ||
@@ -140,11 +140,11 @@ begin
                         vspd_descfincliente);
   sp_buscaparamdinamico('EDI_CAPTURA_PEDIDO', 0, 'USA_REGRA_INCENTIVO', 'S',
                         'N',
-                        'APLICA REGRA DE INCENTIVO NOS PEDIDOS CAPTURADOS PELO EDI?(S=SIM/N=N√O) VALOR PADR√O = N.',
+                        'APLICA REGRA DE INCENTIVO NOS PEDIDOS CAPTURADOS PELO EDI?(S=SIM/N=N√ÉO) VALOR PADR√ÉO = N.',
                         vspd_usaregraincentivo);
   sp_checaparamdinamico('EDI_CAPTURA_PEDIDO', 0, 'IMP_PED_ERRO_EMAIL', 'S',
                         'N',
-                        'IMPORTA PEDIDOS CAPTURADOS PELO EDI MESMO QUE O EMAIL AUTOM¡TICO FOI ENVIADO DEVIDO ALGUM ERRO NO SERVI«O DE SMTP? S-SIM/N-N√O. VALOR PADR√O N.');
+                        'IMPORTA PEDIDOS CAPTURADOS PELO EDI MESMO QUE O EMAIL AUTOM√ÅTICO FOI ENVIADO DEVIDO ALGUM ERRO NO SERVI√áO DE SMTP? S-SIM/N-N√ÉO. VALOR PADR√ÉO N.');
   sp_buscaparamdinamico('EDI_CAPTURA_PEDIDO', 0,
                         'ATUALIZA_ACRES_DESC_CLIENTE', 'S', 'N',
                         'ATUALIZA ACRESCIMO/DESCONTO ASSOCIADO AO CLIENTE NOS PEDIDOS CAPTURADOS PELO EDI? (S=SIM/N=NAO)' ||
@@ -152,24 +152,24 @@ begin
       VALOR PADRAO N.', vspdatualizaacresdesccli);
   sp_buscaparamdinamico('EDI_CAPTURA_PEDIDO', 0, 'VERIFICA_SALDO_PROMOC',
                         'S', 'N',
-                        'VERIFICAR SALDO DA PROMO«√O PARA REALIZAR CORTE NOS PEDIDO? S-SIM/N-N√O. VALOR PADR√O N.',
+                        'VERIFICAR SALDO DA PROMO√á√ÉO PARA REALIZAR CORTE NOS PEDIDO? S-SIM/N-N√ÉO. VALOR PADR√ÉO N.',
                         vspdverifsaldopromoc);
   sp_buscaparamdinamico('EDI_CAPTURA_PEDIDO', 0, 'USA_DESC_MAX_FORNECEDOR',
                         'S', 'N',
-                        'UTILIZA PERCENTUAL M¡XIMO DE DESCONTO DE FORNECEDOR?' ||
+                        'UTILIZA PERCENTUAL M√ÅXIMO DE DESCONTO DE FORNECEDOR?' ||
                          chr(13) || chr(10) || 'S-SIM' || chr(13) || chr(10) ||
-                         'N-N√O(PADR√O)', vspdusadescmaxfornecedor);
+                         'N-N√ÉO(PADR√ÉO)', vspdusadescmaxfornecedor);
   sp_buscaparamdinamico('EDI_CAPTURA_PEDIDO', 0, 'DIAS_VERIF_CLIENTE_SEFAZ',
                         'N', '-1',
-                        'QUANTIDADE EM DIAS PARA VERIFICAR A SITUA«√O CADASTRAL DO CLIENTE NA SEFAZ.' ||
+                        'QUANTIDADE EM DIAS PARA VERIFICAR A SITUA√á√ÉO CADASTRAL DO CLIENTE NA SEFAZ.' ||
                          chr(13) || chr(10) ||
-                         '-1 - N√O VERIFICA(VALOR PADR√O)' || chr(13) ||
+                         '-1 - N√ÉO VERIFICA(VALOR PADR√ÉO)' || chr(13) ||
                          chr(10) ||
-                         'OBS: SER¡ UTILIZADO A DATA ATUAL MENOS A DATA DE ⁄LTIMA VERIFICA«√O.',
+                         'OBS: SER√Å UTILIZADO A DATA ATUAL MENOS A DATA DE √öLTIMA VERIFICA√á√ÉO.',
                         vspdedidiasverifsefaz);
   sp_buscaparamdinamico('EDI_CAPTURA_PEDIDO', 0, 'EMAIL_ERRO_IMPORT', 'S',
                         'N',
-                        'ENVIAR EMAIL QUANDO DER ERRO DE BANCO NA IMPORTACAO DO PEDIDO. DIGITAR EMAILS SEPARADOS POR VIRGULA. N-N√O ENVIA(VALOR PADR√O)',
+                        'ENVIAR EMAIL QUANDO DER ERRO DE BANCO NA IMPORTACAO DO PEDIDO. DIGITAR EMAILS SEPARADOS POR VIRGULA. N-N√ÉO ENVIA(VALOR PADR√ÉO)',
                         vdpdemailerroimportacao);
   -- rc 154452
   sp_buscaparamdinamico('EDI_CAPTURA_PEDIDO', 0, 'RECALC_DESC_EDI_PEDVDA',
@@ -209,7 +209,7 @@ begin
          where p.nrocgccpf = t.nrocgccpf;
       end if;
       if vnclienteecommerce > 0 then
-        --verificaÁ„o se o endereÁo informado j· existe no cat·logo de endereÁos
+        --verifica√ß√£o se o endere√ßo informado j√° existe no cat√°logo de endere√ßos
         select coalesce(max(a.seqpessoaend), 0)
           into vnseqpessoaend
           from ge_pessoaend a
@@ -222,8 +222,8 @@ begin
                fc5limpaacento(upper(t.logradouro))
            and fc5limpaacento(upper(a.nrologradouro)) =
                fc5limpaacento(upper(t.nrologradouro));
-        --seleciona a cidade levando em consideraÁ„o os dados informados
-        --caso n„o encontrada, ser· inserida uma nova cidade baseada na uf informada
+        --seleciona a cidade levando em considera√ß√£o os dados informados
+        --caso n√£o encontrada, ser√° inserida uma nova cidade baseada na uf informada
         select max(a.seqcidade)
           into vnseqcidade
           from ge_cidade a
@@ -240,7 +240,7 @@ begin
              fc5limpaacento(upper(t.cidade)), vnseqcidade);
         end if;
         --seleciona o bairro baseado na cidade informada
-        --caso n„o encontrado, ser· inserido um novo bairro baseado na cidade informada
+        --caso n√£o encontrado, ser√° inserido um novo bairro baseado na cidade informada
         select max(a.seqbairro)
           into vnseqbairro
           from ge_bairro a
@@ -255,7 +255,7 @@ begin
             (vnseqcidade, vnseqbairro, fc5limpaacento(upper(t.bairro)));
         end if;
         --verifica se existe o logradouro na cidade informada
-        --caso n„o encontrado, ser· inserido um novo logradouro baseado na cidade informada
+        --caso n√£o encontrado, ser√° inserido um novo logradouro baseado na cidade informada
         select max(a.seqlogradouro)
           into vnseqlogradouro
           from ge_logradouro a
@@ -270,9 +270,9 @@ begin
             (vnseqcidade, vnseqlogradouro,
              fc5limpaacento(upper(t.logradouro)));
         end if;
-        --par‚metro din‚mico: nomerazao_padrao_para_subst
-        --caso o nomerazao da pessoa esteja dentro de algum elemento deste par‚metro din‚mico
-        --ser· gerada uma vers„o da pessoa com os dados antes de atualizar
+        --par√¢metro din√¢mico: nomerazao_padrao_para_subst
+        --caso o nomerazao da pessoa esteja dentro de algum elemento deste par√¢metro din√¢mico
+        --ser√° gerada uma vers√£o da pessoa com os dados antes de atualizar
         select count(1)
           into vncount
           from (select a.column_value
@@ -290,7 +290,7 @@ begin
                    logradouro || ' ' || nrologradouro || ' ' ||
                     a.cmpltologradouro, cep, nrocgccpf, digcgccpf,
                    inscricaorg, trunc(sysdate), vsusuario,
-                   'ImportaÁ„o de Pedidos WEB.', null, null, fisicajuridica,
+                   'Importa√ß√£o de Pedidos WEB.', null, null, fisicajuridica,
                    indmicroempresa, email, emailnfe, inscinss
               from ge_pessoa a
              where seqpessoa = vnseqpessoa;
@@ -394,7 +394,7 @@ begin
                a.indcontribicms = decode(t.fisicajuridica, 'J', 'S', 'N'),
                a.inscmunicipal = nvl(t.inscmunicipal, a.inscmunicipal),
                a.emailnfe = nvl(t.emailnfe, a.emailnfe),
-               --o processo de atualizaÁ„o de endereÁo est· apenas habilitado para o e-commerce.
+               --o processo de atualiza√ß√£o de endere√ßo est√° apenas habilitado para o e-commerce.
                a.seqcidade = decode(vnclienteecommerce, 0, a.seqcidade,
                                      vnseqcidade),
                a.seqlogradouro = decode(vnclienteecommerce, 0,
@@ -404,7 +404,7 @@ begin
                a.versao = decode(vncount, 0, a.versao, a.versao + 1),
                a.status = decode(vnclienteecommerce, 0, a.status, 'A')
          where a.seqpessoa = vnseqpessoa;
-        -- gerando vers„o da pessoa
+        -- gerando vers√£o da pessoa
         if (vrtpessoa.cidade != t.cidade or vrtpessoa.bairro != t.bairro or
            vrtpessoa.cep != t.cep or vrtpessoa.logradouro != t.logradouro or
            vrtpessoa.nrologradouro != t.nrologradouro or
@@ -415,7 +415,7 @@ begin
            vrtpessoa.nrocgccpf != t.nrocgccpf or
            vrtpessoa.fisicajuridica != t.fisicajuridica or
            vrtpessoa.email != t.email or vrtpessoa.emailnfe != t.emailnfe) then
-          --gera a vers„o da pessoa com os dados atuais
+          --gera a vers√£o da pessoa com os dados atuais
           insert into ge_pessoaversao
             (seqpessoa, versao, nomerazao, cidade, uf, bairro,
              enderecocompleto, cep, nrocgccpf, digcgccpf, inscricaorg,
@@ -427,7 +427,7 @@ begin
              vrtpessoa.logradouro || ' ' || vrtpessoa.nrologradouro || ' ' ||
               vrtpessoa.cmpltologradouro, vrtpessoa.cep, vrtpessoa.nrocgccpf,
              vrtpessoa.digcgccpf, vrtpessoa.inscricaorg, trunc(sysdate),
-             'EDI_PEDVDA', 'Alterado via integraÁ„o.',
+             'EDI_PEDVDA', 'Alterado via integra√ß√£o.',
              vrtpessoa.fisicajuridica, vrtpessoa.indmicroempresa,
              vrtpessoa.email, vrtpessoa.emailnfe, vrtpessoa.inscinss);
           update ge_pessoa a
@@ -435,7 +435,7 @@ begin
            where a.seqpessoa = vnseqpessoa;
         end if;
       end if;
-      --no final da importaÁ„o da pessoa, a mesma È sempre transformada em cliente
+      --no final da importa√ß√£o da pessoa, a mesma √© sempre transformada em cliente
       merge into mrl_cliente a
       using (select xx.seqpessoa
                from ge_pessoa xx
@@ -466,16 +466,16 @@ begin
            vsusuario, sysdate, 'S', null, null, null, null, null, null, null,
            null, null, null, null, null, null, null, null);
       if vnclienteecommerce > 0 then
-        --endereÁo da pessoa n„o foi encontrado,
-        --È feito o cadastro com os novos dados informados
+        --endere√ßo da pessoa n√£o foi encontrado,
+        --√© feito o cadastro com os novos dados informados
         if vnseqpessoaend = 0 and vnseqpessoa > 0 then
           select coalesce(max(seqpessoaend), 0) + 1
             into vnseqpessoaend
             from ge_pessoaend
            where seqpessoa = vnseqpessoa;
-          --os endereÁos de entrega(tipo 'E') comeÁam sempre a partir do sequence 3
-          --esse funcionamento vem da aplicaÁ„o e È um tratamento antigo que existe
-          --na aplicaÁ„o de pessoas
+          --os endere√ßos de entrega(tipo 'E') come√ßam sempre a partir do sequence 3
+          --esse funcionamento vem da aplica√ß√£o e √© um tratamento antigo que existe
+          --na aplica√ß√£o de pessoas
           if vnseqpessoaend < 3 then
             vnseqpessoaend := 3;
           end if;
@@ -511,7 +511,7 @@ begin
       end if;
       sp_buscaparamdinamico('EDI_CAPTURA_PEDIDO', t.nroempresa,
                             'NRO_SEGMENTO_ECOMMERCE', 'N', '0',
-                            'INFORMA O NUMERO DO SEGMENTO PARA INTEGRA«√O COM E-COMMERCE. SE CASO FOR ZERO N√O UTILIZA.',
+                            'INFORMA O NUMERO DO SEGMENTO PARA INTEGRA√á√ÉO COM E-COMMERCE. SE CASO FOR ZERO N√ÉO UTILIZA.',
                             vnnrosegmentoecommerce);
       if vnclienteecommerce > 0 and vnnrosegmentoecommerce > 0 then
         select max(a.status)
@@ -530,14 +530,14 @@ begin
                                      t.nroempresa, vnnrosegmentoecommerce);
         end if;
       end if;
-      --finalizaÁ„o do processo
+      --finaliza√ß√£o do processo
       update edi_pedvendacliente a
          set a.statusimportacao = 'F'
        where a.seqedipedvendacliente = t.seqedipedvendacliente;
       commit;
     end if;
   end loop;
-  -- importaÁ„o dos pedidos
+  -- importa√ß√£o dos pedidos
   for t in (select *
               from edi_pedvenda a
              where nvl(a.nrorepresentante, 1) = case
@@ -553,34 +553,34 @@ begin
              order by a.nropedidoafvref desc)
   loop
     begin
-      -- faz o update para verificar se o registro est· disponÌvel.
+      -- faz o update para verificar se o registro est√° dispon√≠vel.
       update edi_pedvenda a
          set a.statuspedido = 'I'
        where a.seqedipedvenda = t.seqedipedvenda
          and a.statuspedido = 'L';
-      -- se conseguir fazer o update quer dizer que o registro est· disponÌvel e n„o tem outra sess„o alocando.
+      -- se conseguir fazer o update quer dizer que o registro est√° dispon√≠vel e n√£o tem outra sess√£o alocando.
       if sql%rowcount > 0 then
         -- rc erro 129510
         sp_buscaparamdinamico('PED_VENDA', t.nroempresa,
                               'GRAVA_STATUS_SEPARACAO_AUTO', 'S', 'N',
-                              'AO FECHAR O PEDIDO SEMPRE GRAVAR O STATUS DE SEPARA«AO COMO G (GERAR SEPARA«√O AUTOMATICAMENTE)? ' ||
+                              'AO FECHAR O PEDIDO SEMPRE GRAVAR O STATUS DE SEPARA√áAO COMO G (GERAR SEPARA√á√ÉO AUTOMATICAMENTE)? ' ||
                                chr(13) || chr(10) || 'S-SIM ' || chr(13) ||
-                               chr(10) || 'N-N√O(PADR√O) ' || chr(13) ||
+                               chr(10) || 'N-N√ÉO(PADR√ÉO) ' || chr(13) ||
                                chr(10) ||
                                'C-CONFORME CGO(PD CGO_STATUS_SEPARACAO_AUTO) ' ||
                                chr(13) || chr(10) ||
-                               'OBS:UTILIZADO PARA O CASO DE EXPEDI«√O DE PEDIDOS PELO VENDA.',
+                               'OBS:UTILIZADO PARA O CASO DE EXPEDI√á√ÉO DE PEDIDOS PELO VENDA.',
                               vspdgravastatussepauto);
         sp_buscaparamdinamico('PED_VENDA', 0, 'CGO_STATUS_SEPARACAO_AUTO',
                               'S', ' ',
-                              'CONFIGURA QUAIS CGOS ALTERAM O STATUS DE SEPARA«AO COMO G (GERAR SEPARA«√O AUTOMATICAMENTE). ' ||
+                              'CONFIGURA QUAIS CGOS ALTERAM O STATUS DE SEPARA√áAO COMO G (GERAR SEPARA√á√ÉO AUTOMATICAMENTE). ' ||
                                chr(13) || chr(10) ||
                                'OBS:SEPARE OS NUMEROS DOS CGOS POR VIRGULAS. ' ||
                                chr(13) || chr(10) ||
                                'DEPENDE DO PARAMETRO DINAMICO "GRAVA_STATUS_SEPARACAO_AUTO" IGUAL A "C"',
                               vspdcgostatussepauto);
         vninconsistencia := 0;
-        -- verifica se o cliente da edi_pedvenda est· cadastrado
+        -- verifica se o cliente da edi_pedvenda est√° cadastrado
         select count(1)
           into vncountpessoa
           from ge_pessoa p
@@ -608,8 +608,8 @@ begin
                                                          t.seqpessoa,
                                                          t.nrorepresentante,
                                                          'T');
-          -- rc 73490 - pedidos de indenizaÁ„o
-          vspedidoindeniz := 'N'; -- n = n„o; s = sim; i = ignora
+          -- rc 73490 - pedidos de indeniza√ß√£o
+          vspedidoindeniz := 'N'; -- n = n√£o; s = sim; i = ignora
           if t.nropedidoafvref is not null then
             select nvl(a.indusaindenizacao, 'N'), a.tipoindenizacao
               into vsindusaindenizacao, vstipoindenizacao
@@ -703,8 +703,8 @@ begin
                  set a.seqtituloecommerce = vnseqtituloecommerce
                where a.seqedipedvenda = t.seqedipedvenda;
             end if;
-            --para e-commerce utilizar o cgo configurado via parametrizaÁ„o
-            --existe um pd especÌfico pra isso.
+            --para e-commerce utilizar o cgo configurado via parametriza√ß√£o
+            --existe um pd espec√≠fico pra isso.
             if t.indecommerce = 'S' and t.codgeraloper is null then
               -- tratamento para cgo
               vncgoecommerce := fbuscadadosecommerce('C', t.tippedido, null,
@@ -856,13 +856,13 @@ begin
                 from edi_pedvendacliretira a, edi_pedvenda b
                where a.seqedipedvenda = b.seqedipedvenda
                  and a.seqedipedvenda = t.seqedipedvenda;
-            -- busca nropedvenda que sera passado para procedure de geraÁ„o de carga
+            -- busca nropedvenda que sera passado para procedure de gera√ß√£o de carga
             select a.nropedvenda
               into vsnropedvendacarga
               from edi_pedvenda a
              where a.seqedipedvenda = t.seqedipedvenda;
             vnseqitem := 0;
-            /*busca o parametro no cgo de geraÁ„o de alteraÁ„o em estoque -
+            /*busca o parametro no cgo de gera√ß√£o de altera√ß√£o em estoque -
             rc 60122 (foi implementado tratamento para qdo nao utilizar este parametro fazer o tratamento antigo
             e inserir a coluna qtdatendida na coluna qtdatendida)*/
             select x.indexigeestoque, nvl(x.indpreseparapedido, 'N')
@@ -883,7 +883,7 @@ begin
               vnindexigeestoque := vsindexigeestoquecgo;
             end if;
             -- rc 154452 - processo para refazer o valor de desconto e o valor informado
-            -- evitando a diferenÁa entre o pedido de venda e faturamento
+            -- evitando a diferen√ßa entre o pedido de venda e faturamento
             if (vspd_recalcdesconto = 'S') then
               update edi_pedvendaitem a
                  set a.vlrembinformado = trunc(a.vlrembinformado, 2),
@@ -899,7 +899,7 @@ begin
                      trunc(a.vlrembinformado, 2);
             end if;
             -- rc 154452 fim
-            --tratamento especÌfico para e-commerce. origem: sp_insereedipedvendaecommerce(descontinuada)
+            --tratamento espec√≠fico para e-commerce. origem: sp_insereedipedvendaecommerce(descontinuada)
             /*
             * 1-efetuado
             * 4-problemas
@@ -910,7 +910,7 @@ begin
             * 17-despachado
             * 92-entregue
             * 99-troca
-            * 100-cupom prÛxima compra
+            * 100-cupom pr√≥xima compra
             * 108-alterar forma de pagamento
             */
             if t.indecommerce = 'S' then
@@ -959,10 +959,10 @@ begin
                        where a.seqedipedvenda = t.seqedipedvenda
                        order by a.seqproduto)
             loop
-              /* c·lcula percentual m·ximo de desconto fornecedor - rc 129908 */
+              /* c√°lcula percentual m√°ximo de desconto fornecedor - rc 129908 */
               if nvl(vspdusadescmaxfornecedor, 'N') = 'S' and
                  i.vlrembtabpreco > i.vlrembinformado then
-                -- % m·ximo de desconto fornecedor
+                -- % m√°ximo de desconto fornecedor
                 select nvl(max(b.percmaxdescforn), 0)
                   into vnpercmaxdescforn
                   from map_produto a, mad_famsegmento b
@@ -1016,8 +1016,8 @@ begin
                 sp_buscaparamdinamico('PED_VENDA', 0,
                                       'INF_UF_CLIENTE_SUBTRAIR_ICMSST', 'S',
                                       'MG',
-                                      'INF. UF DOS CLIENTES QUE SER√O CONSIDERADOS PARA SUBTRAIR O VALOR TOTAL DE ICMS ST DO VALOR TOTAL DO PRODUTO NA DIG. DO PEDIDO DE VENDA OU INTEGRA«√O AFV.' ||
-                                       chr(13) || chr(10) || 'PADR√O: MG' ||
+                                      'INF. UF DOS CLIENTES QUE SER√ÉO CONSIDERADOS PARA SUBTRAIR O VALOR TOTAL DE ICMS ST DO VALOR TOTAL DO PRODUTO NA DIG. DO PEDIDO DE VENDA OU INTEGRA√á√ÉO AFV.' ||
+                                       chr(13) || chr(10) || 'PADR√ÉO: MG' ||
                                        chr(13) || chr(10) ||
                                        'OBS: SEPARADO POR VIRGULA.' ||
                                        chr(13) || chr(10) ||
@@ -1231,7 +1231,7 @@ begin
                    where a.seqedipedvenda = t.seqedipedvenda
                      and a.seqpedvendaitem = i.seqpedvendaitem;
               
-                -- rc 44091 verificar as criticas do tipo 'Na AtualizaÁ„o do Item no Pedido' e cujo procedimento seja de 'Cortar Item'.
+                -- rc 44091 verificar as criticas do tipo 'Na Atualiza√ß√£o do Item no Pedido' e cujo procedimento seja de 'Cortar Item'.
                 vscodcritica := null;
                 select max(a.codcritica)
                   into vscodcritica
@@ -1299,7 +1299,7 @@ begin
                     update mad_pedvendaitem x
                        set x.qtdatendida = vnqtdpromo,
                            x.observacaoitem = x.observacaoitem ||
-                                               '* Item cortado devido ao limite de quantidade da promoÁ„o *'
+                                               '* Item cortado devido ao limite de quantidade da promo√ß√£o *'
                      where x.nropedvenda = i.nropedvenda
                        and x.nroempresa =
                            nvl(vnnroempresasec, t.nroempresa)
@@ -1317,7 +1317,7 @@ begin
                        'Corte de Item no Pedido ' || i.nropedvenda,
                        'O pedido ' || i.nropedvenda || ' teve o item ' ||
                         i.seqproduto ||
-                        ' cortado devido ao limite de quantidade da promoÁ„o.',
+                        ' cortado devido ao limite de quantidade da promo√ß√£o.',
                        vnnrorepresentante, vnseqpessoa, 'N', 'N');
                     insert into mad_recadopararep
                       (seqrecado, nrorepresentante, dtaleitura, indexcluido,
@@ -1373,7 +1373,7 @@ begin
                                                                         null,
                                                                         'N'),
                            x.observacaoitem = x.observacaoitem ||
-                                               '* Alterado para o preÁo normal de venda devido a acabar o saldo de promoÁ„o *'
+                                               '* Alterado para o pre√ßo normal de venda devido a acabar o saldo de promo√ß√£o *'
                      where x.nropedvenda = i.nropedvenda
                        and x.nroempresa =
                            nvl(vnnroempresasec, t.nroempresa)
@@ -1460,9 +1460,9 @@ begin
                                          (vnvlrdespacessoria *
                                          vnaliqrateiodespacessoria);
                 end loop;
-                -- gravando a diferenÁa calculada no item com o maior valor de rateio calculado
+                -- gravando a diferen√ßa calculada no item com o maior valor de rateio calculado
                 if vncalcdespacessoria != vnvlrdespacessoria then
-                  /* verifica o pedido e a empresa para utilizaÁ„o no sql abaixo */
+                  /* verifica o pedido e a empresa para utiliza√ß√£o no sql abaixo */
                   select a.nropedvenda, a.nroempresa
                     into vnnropedvendarateio, vnnroemprateio
                     from madv_impedipedvenda a
@@ -1488,8 +1488,8 @@ begin
                                                  ped.vlrdesptributitem
                                               end desc)
                            where rownum = 1);
-                  /* atualiza a diferenÁa para que a soma dos valores de rateio dos itens fique igual ao valor de rateio definido no
-                  cabeÁalho do pedido */
+                  /* atualiza a diferen√ßa para que a soma dos valores de rateio dos itens fique igual ao valor de rateio definido no
+                  cabe√ßalho do pedido */
                   update mad_pedvendaitem a
                      set a.vlrdespntributitem = nvl(a.vlrdespntributitem, 0) +
                                                  decode(vnformataxaconv, 'N',
@@ -1514,7 +1514,7 @@ begin
                                         nvl(vnnroempresasec, t.nroempresa));
                 spmad_aplicadescpedvendaregra(vnnropedvenda,
                                               nvl(vnnroempresasec,
-                                                   t.nroempresa)); -- linha inserida apÛs autorizaÁ„o no chamado n.53263.
+                                                   t.nroempresa)); -- linha inserida ap√≥s autoriza√ß√£o no chamado n.53263.
               end if;
               if vspdatualizaacresdesccli = 'S' then
                 spmad_aplicaacresdesccliente(vnnropedvenda,
@@ -1536,18 +1536,18 @@ begin
                   from madv_impedipedvenda a, edi_pedvendavenc b
                  where a.seqedipedvenda = t.seqedipedvenda
                    and b.seqedipedvenda = a.seqedipedvenda;
-              -- req. 123878 - inserÁ„o dos componentes da receita ao invÈs do produto final
+              -- req. 123878 - inser√ß√£o dos componentes da receita ao inv√©s do produto final
               sp_buscaparamdinamico('PED_VENDA', t.nroempresa,
                                     'INS_COMPONENTES_PROD_COMP_VAR', 'S',
                                     'N',
-                                    'INSERIR OS COMPONENTES DO PRODUTO(AO INV…S DO PR”PRIO) QUANDO SE TRATAR DE UM PRODUTO DE COMPOSI«√O VARI¡VEL E FOR PRODUTO FINAL NA RECEITA?' ||
+                                    'INSERIR OS COMPONENTES DO PRODUTO(AO INV√âS DO PR√ìPRIO) QUANDO SE TRATAR DE UM PRODUTO DE COMPOSI√á√ÉO VARI√ÅVEL E FOR PRODUTO FINAL NA RECEITA?' ||
                                      chr(13) || chr(10) ||
                                      'S-NO PEDIDO DE VDA' || chr(13) ||
-                                     chr(10) || 'N-N√O USA(PADR√O)' ||
+                                     chr(10) || 'N-N√ÉO USA(PADR√ÉO)' ||
                                      chr(13) || chr(10) ||
                                      'F-NO FATURAMENTO' || chr(13) ||
                                      chr(10) ||
-                                     'B-OP«√O "S" E QUANDO FOR BONIFICADO',
+                                     'B-OP√á√ÉO "S" E QUANDO FOR BONIFICADO',
                                     vspdinscomponentesprodcompvar);
               if vspdinscomponentesprodcompvar in ('S', 'B') then
                 sp_trocaprodporcomponentes(null, vnnropedvenda,
@@ -1556,7 +1556,7 @@ begin
               end if;
               sp_buscaparamdinamico('PED_VENDA', t.nroempresa,
                                     'UTIL_TRANSF_OUT_EMPRESA', 'S', 'N',
-                                    'UTILIZA RECURSO TRANSFERIR DE OUTRA EMPRESA QUANDO UTILIZADO PAR¬METRO QUE USA ESTOQUE DE OUTRA EMPRESA NA VENDA/TRANSFER NCIA (PADR√O = N).',
+                                    'UTILIZA RECURSO TRANSFERIR DE OUTRA EMPRESA QUANDO UTILIZADO PAR√ÇMETRO QUE USA ESTOQUE DE OUTRA EMPRESA NA VENDA/TRANSFER√äNCIA (PADR√ÉO = N).',
                                     vspd_utiltransfoutempresa);
               sp_buscaparamdinamico('PED_VENDA', t.nroempresa,
                                     'UTIL_PED_ITEM_MULTI_EMPRESA', 'S', 'N',
@@ -1768,9 +1768,9 @@ begin
             
             sp_buscaparamdinamico('PED_VENDA', t.nroempresa,
                                   'CGO_BONIFICACAO_FORNECEDOR', 'N', '0',
-                                  'CGO QUE SER¡ UTILIZADO PARA BONIFICA«√O DE FORNECEDOR QUANDO O VALOR DE VERBA FOR IGUAL AO VALOR TOTAL DO PEDIDO DE VENDA' ||
+                                  'CGO QUE SER√Å UTILIZADO PARA BONIFICA√á√ÉO DE FORNECEDOR QUANDO O VALOR DE VERBA FOR IGUAL AO VALOR TOTAL DO PEDIDO DE VENDA' ||
                                    chr(13) || chr(10) ||
-                                   '0-N√O INFORMADO(VALOR PADR√O)',
+                                   '0-N√ÉO INFORMADO(VALOR PADR√ÉO)',
                                   vscgoboniffornec);
             vnpdcgoboniffornec := to_number(vscgoboniffornec);
             for vtverbafornec in (select a.nropedvenda, a.nroempresa
@@ -1828,7 +1828,7 @@ begin
                where a.nropedvenda = vtverbafornec.nropedvenda
                  and a.nroempresa =
                      nvl(vnnroempresasec, vtverbafornec.nroempresa);
-              -- caso o valor de verba do pedido for igual ao valor total do pedido o cgo È alterado para o cgo de bonificaÁ„o
+              -- caso o valor de verba do pedido for igual ao valor total do pedido o cgo √© alterado para o cgo de bonifica√ß√£o
               if vnvlrtotverba > 0 and vnvlrtotverba >= vnvlrtotpedido then
                 if vnpdcgoboniffornec > 0 then
                   update mad_pedvenda a
@@ -1851,7 +1851,7 @@ begin
               spmad_geraitensboniffornec(t.seqedipedvenda);
             end if;
           end if;
-          --importaÁ„o da forma de pagamento
+          --importa√ß√£o da forma de pagamento
           for vtformapagto in (select a.nropedvenda, a.nroempresa,
                                       b.nroformapagto, b.nrocondpagto,
                                       b.valor, b.linkerp,
@@ -1889,7 +1889,7 @@ begin
           from mad_pedvenda a
          where a.nropedvenda = vsnropedvendacarga
            and a.nroempresa = nvl(vnnroempresasec, t.nroempresa);
-        -- gera carga de expediÁ„o se indtiposeparacaoecom = 'P'
+        -- gera carga de expedi√ß√£o se indtiposeparacaoecom = 'P'
         if vsindtiposeparacaoecom = 'P' then
           spmad_geracargapedvenda(nvl(vnnroempresasec, t.nroempresa),
                                   vsnropedvendacarga, vsusugeracao);
@@ -1900,7 +1900,7 @@ begin
                                                nvl(vnnroempresasec,
                                                     t.nroempresa),
                                                vsusugeracao);
-          -- realiza a emiss„o dos boletos e nota fiscal, relacionados ao pedido
+          -- realiza a emiss√£o dos boletos e nota fiscal, relacionados ao pedido
           if vsindfaturaautopedecomm = 'E' then
             -- busca as notas fiscais geradas pelo faturamento
             for tn in (select a.seqnotafiscal, a.numerodf, a.seriedf,
@@ -1920,7 +1920,7 @@ begin
                               nvl(vnnroempresasec, t.nroempresa)
                           and a.statusdf != 'C')
             loop
-              -- emiss„o de notas fiscais
+              -- emiss√£o de notas fiscais
               update mfl_doctofiscal a
                  set a.indemissaonf = 'S', a.usuemitiu = vsusugeracao,
                      a.dtahorsaida = tn.dtahoremissao,
@@ -1934,7 +1934,7 @@ begin
                 sp_exportanfe(tn.seqnotafiscal, 'E');
               end if;
             end loop;
-            -- emiss„o de boletos
+            -- emiss√£o de boletos
             for tb in (select b.seriedf, b.statusnfe, b.numerodf, a.nrocarga
                          from mrl_titulofin a, mfl_doctofiscal b
                         where a.nrodocumento = b.numerodf
@@ -1961,7 +1961,7 @@ begin
       end if;
     exception
       when others then
-        -- desfaz as transaÁıes em caso de erro e gera os logs.
+        -- desfaz as transa√ß√µes em caso de erro e gera os logs.
         rollback;
         vserro := sqlerrm;
         vserro := vserro || ' Nro Pedido AFV ' || t.nropedidoafv;
@@ -2069,7 +2069,7 @@ begin
     sp_imp_edipedvendacritica(null, null, t.seqedipedvendarecado, 'R',
                               vninconsistencia, null, null); --faz consistencia dos recados
     if vninconsistencia = 0 then
-      sp_imp_edipedvendarecado(t.seqedipedvendarecado); --integraÁ„o recados
+      sp_imp_edipedvendarecado(t.seqedipedvendarecado); --integra√ß√£o recados
     end if;
   end loop;
 
